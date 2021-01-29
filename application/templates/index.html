@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ancrush - {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='img/favicon.ico')}}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/admin/dashboard.css')}}" rel="stylesheet">
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="vertical-menu">
+        <div class="menu-header">
+            <img src="{{url_for('static', filename='img/favicon.ico')}}" alt="logo">
+            <h3>Ancrush</h3>
+        </div>
+        <a class="vertical_menu_item" href="{{url_for('companies.all_companies')}}">Компании</a>
+        <a class="vertical_menu_item" href="#">Логи расширения</a>
+    </div>
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid page__content">
+            {% if message %}
+            <h1>{{ message }}</h1>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+    <script src="{{url_for('static', filename='js/axios.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/main.js')}}"></script>
+</html>
