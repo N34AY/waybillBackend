@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+
+{% block title %}Редактирование списка{% endblock %}
+
+{% block content %}
+<h2>Редактирование списка</h2>
+<form method="post">
+    <div class="form-group">
+        <label for="name">Название списка</label>
+        <input required type="text" name="name" id="name" class="form-control" minlength="4" placeholder="Список" value='{{ lst.name }}'>
+    </div>
+    <div class="form-group">
+        <label for="company">Компания</label>
+        <select name="company" id="company">
+            <option disabled>Выберите компанию</option>
+            <option selected  value="{{ lst.company._id }}">{{ lst.company.name }}</option>
+            {% for company in companies %}
+                {% if company ==  lst.company %}
+                <option value="{{ company.id }}">{{ company.name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <input value="Создать" type="submit" class="btn btn-success">
+</form>
+{% endblock %}

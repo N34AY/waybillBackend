@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+
+{% block title %}Создание списка{% endblock %}
+
+{% block content %}
+<h2>Создание списка</h2>
+<form method="post" name="create">
+    <div class="form-group">
+        <label for="name">Название списка</label>
+        <input required type="text" name="name" id="name" class="form-control" minlength="4" placeholder="Список">
+    </div>
+    <div class="form-group">
+        <label for="company">Компания</label>
+        <select name="company" id="company">
+            <option disabled>Выберите компанию</option>
+            {% for company in companies %}
+            <option value="{{ company.id }}">{{ company.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <input value="Создать" type="submit" class="btn btn-success">
+</form>
+{% endblock %}

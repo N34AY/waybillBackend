@@ -1,4 +1,7 @@
+from datetime import datetime
 from bson import ObjectId
+
+
 from flask import Blueprint, render_template, request, jsonify, redirect, make_response, url_for
 
 
@@ -16,7 +19,7 @@ def create_company():
         email = request.form.get('email')
         description = request.form.get('description')
 
-        company = {'name': name, 'phone': phone, 'email': email, 'description': description}
+        company = {'name': name, 'phone': phone, 'email': email, 'description': description, "created_at": datetime.utcnow()}
         Company.insert_one(company)
 
         return redirect(url_for('companies.all_companies'))
@@ -32,7 +35,7 @@ def edit_company(company_id):
         email = request.form.get('email')
         description = request.form.get('description')
 
-        company = {"$set": {'name': name, 'phone': phone, 'email': email, 'description': description}}
+        company = {"$set": {'name': name, 'phone': phone, 'email': email, 'description': description, "updated_at": datetime.utcnow()}}
         Company.update_one({'_id': ObjectId(oid=company_id)}, company)
 
         return redirect(url_for('companies.all_companies'))
