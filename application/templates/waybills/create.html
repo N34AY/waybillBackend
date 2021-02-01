@@ -1,0 +1,81 @@
+{% extends "index.html" %}
+
+{% block title %}Создание накладной{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+
+{% block content %}
+<h2>Создание накладной</h2>
+<form method="post" name="create">
+    <div class="form-group">
+        <label for="name">Название накладной</label>
+        <input required type="text" name="name" id="name" class="form-control" minlength="4" placeholder="Накладная">
+    </div>
+    <div class="form-group">
+        <label for="lst">Список</label>
+        <select name="lst" id="lst">
+            <option disabled>Выберите список</option>
+            {% for lst in lists %}
+            <option value="{{ lst.id }}">{{ lst.company.name }} | {{ lst.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <input value="Создать" type="submit" class="btn btn-success">
+</form>
+<div id="table">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Наименование</th>
+                <th>Артикул</th>
+                <th>Количество</th>
+                <th>Цена</th>
+                <th>Сумма</th>
+                <th>Х</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            {% for data in table_data %}
+            <tr>
+                <td id="rowNumber">{{ loop.index }}</td>
+                <td><input name="name" placeholder="наименование" value="{{ data.name }}"></td>
+                <td><input name="article" placeholder="артикул" value="{{ data.article }}"></td>
+                <td><input name="price" placeholder="цена" value="{{ data.price }}"></td>
+                <td><input name="quantity" placeholder="кол-во" value="{{ data.quantity }}"></td>
+                <td><input disabled name="sum" placeholder="сумма" value="{{ data.sum }}"></td>
+                <td><button onclick="deleteRow(this)">-</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><button onclick="addNewRow()">+</button></td>
+                <td colspan="3" style="text-align:right"><b>ИТОГО:</b></td>
+                <td colspan="2"><b>{{fCalcPrice}}</b></td>
+            </tr>
+        </tfoot>
+  </table>
+</div>
+
+<script>
+function addNewRow() {
+    let numbers = document.querySelectorAll("#rowNumber")
+    let prevNumber = Number(numbers[numbers.length - 1].innerHTML)
+    let row = `<tr>
+                <td id="rowNumber">${prevNumber + 1}</td>
+                <td><input name="name" placeholder="наименование"></td>
+                <td><input name="article" placeholder="артикул"></td>
+                <td><input name="price" placeholder="цена"></td>
+                <td><input name="quantity" placeholder="кол-во"></td>
+                <td><input disabled="" name="sum" placeholder="сумма"></td>
+                <td><button onclick="deleteRow(this)">-</button></td>
+            </tr>`
+    document.getElementById("tableBody").insertAdjacentHTML("beforeEnd", row)
+}
+
+function deleteRow(elem) {
+    elem.closest("tr").remove()
+}
+</script>
+{% endblock %}

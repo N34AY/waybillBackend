@@ -17,17 +17,33 @@ mod_waybills = Blueprint('waybills', __name__, url_prefix='/waybills')
 def create_list():
     if request.method == 'POST':
         name = request.form.get('name')
-        company_id = request.form.get('company')
-        company = Company.find_one({'_id': ObjectId(oid=company_id)})
+        data = request.form.get('data')
+        lst_id = request.form.get('lst')
+        lst = List.find_one({'_id': ObjectId(oid=lst_id)})
 
-        new_list = {'name': name, 'company': company, "created_at": datetime.utcnow(), "updated_at": None}
-        List.insert_one(new_list)
+        new_waybill = {'name': name, 'lst': lst, "data": data, "created_at": datetime.utcnow(), "updated_at": None}
+        Waybill.insert_one(new_waybill)
 
         return redirect(url_for('lists.all_lists'))
     if request.method == 'GET':
-        companies = []
-        for company in Company.find():
-            company_obj = {"id": str(company['_id']), "name": company['name']}
-            companies.append(company_obj)
-
-        return render_template('lists/create.html', companies=companies)
+        lists = []
+        for lst in List.find():
+            lst_obj = {"id": str(lst['_id']), "name": lst['name'], "company": lst['company']}
+            lists.append(lst_obj)
+        table_data = [
+            {
+                "name": "name1",
+                "article": "323432",
+                "price": "284",
+                "quantity": "10",
+                "sum": "4"
+            },
+            {
+                "name": "name2",
+                "article": "32fgfd3432",
+                "price": "24",
+                "quantity": "20",
+                "sum": "5343"
+            }
+        ]
+        return render_template('waybills/create.html', lists=lists, table_data=table_data)
