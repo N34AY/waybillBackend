@@ -2,7 +2,7 @@ from datetime import datetime
 from bson import ObjectId
 
 
-from flask import Blueprint, render_template, request, jsonify, redirect, make_response, url_for
+from flask import Blueprint, request
 
 
 from application.companies.models import Company
@@ -12,52 +12,46 @@ from application.lists.models import List
 mod_lists = Blueprint('lists', __name__, url_prefix='/lists')
 
 
-@mod_lists.route('create', methods=['GET', 'POST'])
+@mod_lists.route('/create', methods=['POST'])
 def create_list():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        company_id = request.form.get('company')
-        company = Company.find_one({'_id': ObjectId(oid=company_id)})
+    name = request.json.get('name')
+    company_id = request.json.get('company')
+    company = Company.find_one({'_id': ObjectId(oid=company_id)})
 
-        new_list = {'name': name, 'company': company, "created_at": datetime.utcnow(), "updated_at": None}
-        List.insert_one(new_list)
+    new_list = {'name': name, 'company': company, "created_at": datetime.utcnow(), "updated_at": None}
+    List.insert_one(new_list)
 
-        return redirect(url_for('lists.all_lists'))
-    if request.method == 'GET':
-        companies = []
-        for company in Company.find():
-            company_obj = {"id": str(company['_id']), "name": company['name']}
-            companies.append(company_obj)
-
-        return render_template('lists/create.html', companies=companies)
+    return {"status": "success"}
 
 
-@mod_lists.route('edit/<ObjectId:list_id>', methods=['GET', 'POST'])
+@mod_lists.route('/get/<ObjectId:list_id>', methods=['GET'])
+def get_list(list_id):
+    lst = List.find_one({'_id': ObjectId(oid=list_id)})
+
+    company = {"id": str(lst['company']['_id']), "name": lst['company']['name']}
+    lst = {"id": str(lst['_id']), "name": lst['name'], "company": company}
+
+    return {"status": "success", "list": lst}
+
+
+@mod_lists.route('edit/<ObjectId:list_id>', methods=['POST'])
 def edit_list(list_id):
-    if request.method == 'POST':
-        name = request.form.get('name')
-        company_id = request.form.get('company')
-        print(company_id)
-        company = Company.find_one({'_id': ObjectId(oid=company_id)})
+    name = request.json.get('name')
+    company_id = request.json.get('company')
 
-        lst = {"$set": {'name': name, 'company': company, "updated_at": datetime.utcnow()}}
-        List.update_one({'_id': ObjectId(oid=list_id)}, lst)
+    company = Company.find_one({'_id': ObjectId(oid=company_id)})
 
-        return redirect(url_for('lists.all_lists'))
-    if request.method == 'GET':
-        companies = []
-        for company in Company.find():
-            company_obj = {"id": str(company['_id']), "name": company['name']}
-            companies.append(company_obj)
+    lst = {"$set": {'name': name, 'company': company, "updated_at": datetime.utcnow()}}
+    List.update_one({'_id': ObjectId(oid=list_id)}, lst)
 
-        lst = List.find_one({'_id': ObjectId(oid=list_id)})
-        return render_template('lists/edit.html', lst=lst, companies=companies)
+    return {"status": "success"}
 
 
-@mod_lists.route('delete/<ObjectId:list_id>', methods=['GET'])
+@mod_lists.route('delete/<ObjectId:list_id>', methods=['DELETE'])
 def delete_list(list_id):
     List.delete_one({'_id': ObjectId(oid=list_id)})
-    return redirect(url_for('lists.all_lists'))
+
+    return {"status": "success"}
 
 
 @mod_lists.route('/', methods=['GET'])
@@ -66,4 +60,5 @@ def all_lists():
     for lst in List.find():
         list_obj = {"id": str(lst['_id']), "name": lst['name'], "company": lst['company']['name'], "created_at": lst['created_at'], "updated_at": lst['updated_at']}
         lists.append(list_obj)
-    return render_template('lists/all.html', lists=lists)
+
+    return {"status": "success", "lists": lists}

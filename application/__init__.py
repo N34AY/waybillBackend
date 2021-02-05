@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask
 from flask_pymongo import PyMongo
+from flask_cors import CORS
 
 
 # Define the WSGI application object
@@ -8,6 +9,7 @@ app = Flask(__name__)
 # Configurations
 app.config.from_object('config')
 mongo = PyMongo(app)
+CORS(app)
 
 
 # Import a module / component using its blueprint handler variable (mod_auth)
