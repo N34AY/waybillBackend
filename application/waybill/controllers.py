@@ -38,7 +38,7 @@ def get_waybill(waybill_id):
 
 
 @mod_waybills.route('edit/<ObjectId:waybill_id>', methods=['POST'])
-def edit_list(waybill_id):
+def edit_waybill(waybill_id):
     name = request.json.get('name')
     lst_id = request.json.get('lst')
     sheet = request.json.get('sheet')
@@ -52,7 +52,7 @@ def edit_list(waybill_id):
 
 
 @mod_waybills.route('delete/<ObjectId:waybill_id>', methods=['DELETE'])
-def delete_list(waybill_id):
+def delete_waybill(waybill_id):
     Waybill.delete_one({'_id': ObjectId(oid=waybill_id)})
 
     return {"status": "success"}
@@ -63,7 +63,7 @@ def all_waybills():
     waybills = []
     for waybill in Waybill.find():
         print(waybill)
-        waybill_obj = {"id": str(waybill['_id']), "name": waybill['name'], "lst": waybill['lst']['name'], "created_at": waybill['created_at'], "updated_at": waybill['updated_at']}
+        waybill_obj = {"id": str(waybill['_id']), "name": waybill['name'], "lst": {"id": str(waybill['lst']['_id']), "name": waybill['lst']['name']}, "created_at": waybill['created_at'], "updated_at": waybill['updated_at']}
         waybills.append(waybill_obj)
 
     return {"status": "success", "waybills": waybills}

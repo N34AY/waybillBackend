@@ -8,7 +8,7 @@ DEBUG = True
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Define the database - we are working with
-MONGO_URI = "mongodb://localhost:27017/waybill"
+MONGO_URI = "mongodb://127.0.0.1:27017/waybill"
 DATABASE_CONNECT_OPTIONS = {}
 
 # Application threads. A common general assumption is

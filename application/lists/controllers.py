@@ -7,6 +7,7 @@ from flask import Blueprint, request
 
 from application.companies.models import Company
 from application.lists.models import List
+from application.waybill.models import Waybill
 
 
 mod_lists = Blueprint('lists', __name__, url_prefix='/lists')
@@ -58,7 +59,13 @@ def delete_list(list_id):
 def all_lists():
     lists = []
     for lst in List.find():
-        list_obj = {"id": str(lst['_id']), "name": lst['name'], "company": lst['company']['name'], "created_at": lst['created_at'], "updated_at": lst['updated_at']}
+        bills = []
+        for waybill in Waybill.find({'lst._id': ObjectId(oid=lst['_id'])}):
+            waybill_obj = {"id": str(waybill['_id']), "name": waybill['name'],
+                           "lst": {"id": str(waybill['lst']['_id']), "name": waybill['lst']['name']},
+                           "created_at": waybill['created_at'], "updated_at": waybill['updated_at']}
+            bills.append(waybill_obj)
+        list_obj = {"id": str(lst['_id']), "name": lst['name'], "company": {"id": str(lst['company']['_id']), "name": lst['company']['name']}, "waybills": bills, "created_at": lst['created_at'], "updated_at": lst['updated_at']}
         lists.append(list_obj)
 
     return {"status": "success", "lists": lists}
