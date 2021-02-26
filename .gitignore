@@ -22,8 +22,6 @@
 *.pyo
 __pycache__
 .pytest_cache
-# venv/
-screenshots/
 
 # Environments
 .env
