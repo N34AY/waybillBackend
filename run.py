@@ -1,5 +1,5 @@
 from application import app
-from config import DEBUG, HOST
+from config import DEBUG, HOST, PORT
 
 
-app.run(debug=DEBUG)
+app.run(host=HOST, port=PORT, debug=DEBUG)

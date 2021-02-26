@@ -1,14 +1,19 @@
 import os
+from dotenv import load_dotenv
 
-HOST = '0.0.0.0'
+
+load_dotenv()
+
+HOST = os.getenv("HOST")
+PORT = os.getenv("PORT")
 # Statement for enabling the development environment
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 # Define the application directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Define the database - we are working with
-MONGO_URI = "mongodb://127.0.0.1:27017/waybill"
+MONGO_URI = os.getenv("MONGO_URI")
 DATABASE_CONNECT_OPTIONS = {}
 
 # Application threads. A common general assumption is
